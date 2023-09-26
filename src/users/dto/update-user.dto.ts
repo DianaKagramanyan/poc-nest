@@ -1,11 +1,11 @@
-import { IsArray, IsNumber, IsOptional} from "class-validator";
+import { IsArray, IsEmail, IsNumber, IsOptional, IsString } from "class-validator";
 
 export class UpdateUserDto {
-  @IsArray()
+  @IsEmail()
   @IsOptional()
-  favoriteFoods: string[];
+  email: string;
 
-  @IsNumber()
+  @IsString()
   @IsOptional()
-  age: number;
+  password: string;
 }

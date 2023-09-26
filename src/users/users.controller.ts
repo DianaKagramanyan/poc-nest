@@ -24,7 +24,7 @@ export class UsersController {
 
   @Post()
   async createUser(@Body() createUserDto: CreateUserDto): Promise<User> {
-    return this.usersService.createUser(createUserDto.email, createUserDto.age);
+    return this.usersService.createUser(createUserDto.email, createUserDto.password);
   }
 
   @Patch(":userId")
@@ -36,5 +36,4 @@ export class UsersController {
   async removeUser(@Param("userId") userId: string): Promise<User>{
     return this.usersService.removeUser(userId);
   }
-
 }
