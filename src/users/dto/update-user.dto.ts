@@ -1,4 +1,9 @@
+import { IsArray, IsNumber} from "class-validator";
+
 export class UpdateUserDto {
-  favoriteFoods: string[]
+  @IsArray()
+  favoriteFoods: string[];
+
+  @IsNumber()
   age: number;
 }
