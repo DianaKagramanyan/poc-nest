@@ -1,11 +1,13 @@
 import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-
 import { User } from './schemas/user.schema';
 import { UsersService } from './users.service';
+import {UserDto} from "./dto/user.dto";
+import { Serialize } from "../interceptors/serialize.interceptor";
 
 @Controller('users')
+@Serialize(UserDto)
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
