@@ -11,7 +11,6 @@ export class UsersRepository {
   async findOne(userFilterQuery: FilterQuery<User>): Promise<User> {
     return this.userModel.findOne(userFilterQuery);
   }
-
   async find(usersFilterQuery: FilterQuery<User>): Promise<User[]> {
     return this.userModel.find(usersFilterQuery);
   }

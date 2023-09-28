@@ -12,12 +12,16 @@ export class UsersService {
   async getUserById(userId: string): Promise<User> {
     return this.usersRepository.findOne({ userId });
   }
+  async getUserByEmail(email: string): Promise<User> {
+    console.log(email);
+    return this.usersRepository.findOne({ email });
+  }
 
   async getUsers(): Promise<User[]> {
     return this.usersRepository.find({});
   }
 
-  async createUser(email: string, password:string): Promise<User> {
+  async createUser(email: string, password: string): Promise<User> {
     return this.usersRepository.create({
       userId: uuidv4(),
       email,
@@ -28,7 +32,8 @@ export class UsersService {
   async updateUser(userId: string, userUpdates: UpdateUserDto): Promise<User> {
     return this.usersRepository.findOneAndUpdate({ userId }, userUpdates);
   }
-  async removeUser(userId: string):Promise<User>{
-    return this.usersRepository.findOneAndDelete({userId})
+
+  async removeUser(userId: string): Promise<User> {
+    return this.usersRepository.findOneAndDelete({ userId });
   }
 }
