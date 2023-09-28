@@ -20,7 +20,6 @@ export class UsersService {
   async getUsers(): Promise<User[]> {
     return this.usersRepository.find({});
   }
-
   async createUser(email: string, password: string): Promise<User> {
     return this.usersRepository.create({
       userId: uuidv4(),

@@ -5,20 +5,22 @@ import { User } from "./schemas/user.schema";
 import { UsersService } from "./users.service";
 import { UserDto } from "./dto/user.dto";
 import { Serialize } from "../interceptors/serialize.interceptor";
+import { AuthService } from "./auth.service";
 
 @Controller("users")
 @Serialize(UserDto)
 export class UsersController {
-  constructor(private readonly usersService: UsersService) {
-  }
+  constructor(private readonly usersService: UsersService,
+              private authService: AuthService
+  ) {}
 
-  @Get(":userId")
-  async getUser(@Param("userId") userId: string): Promise<User> {
-    return this.usersService.getUserById(userId);
-  }
+  // @Get(":userId")
+  // async getUser(@Param("userId") userId: string): Promise<User> {
+  //   return this.usersService.getUserById(userId);
+  // }
   @Get("email")
   async getUserByEmail(@Query("email") email: string): Promise<User> {
-    console.log(email)
+    console.log(email);
     return this.usersService.getUserByEmail(email);
   }
 
@@ -26,9 +28,11 @@ export class UsersController {
   async getUsers(): Promise<User[]> {
     return this.usersService.getUsers();
   }
-  @Post()
+
+  @Post('/signup')
   async createUser(@Body() createUserDto: CreateUserDto): Promise<User> {
-    return this.usersService.createUser(createUserDto.email, createUserDto.password);
+    // return this.usersService.createUser(createUserDto.email, createUserDto.password);
+    return this.authService.signup(createUserDto.email, createUserDto.password);
   }
 
   @Patch(":userId")
@@ -37,7 +41,7 @@ export class UsersController {
   }
 
   @Delete(":userId")
-  async removeUser(@Param("userId") userId: string): Promise<User>{
+  async removeUser(@Param("userId") userId: string): Promise<User> {
     return this.usersService.removeUser(userId);
   }
 }
