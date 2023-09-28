@@ -14,6 +14,16 @@ export class UsersController {
               private authService: AuthService
   ) {}
 
+  @Post('/signup')
+  async createUser(@Body() createUserDto: CreateUserDto): Promise<User> {
+    // return this.usersService.createUser(createUserDto.email, createUserDto.password);
+    return this.authService.signup(createUserDto.email, createUserDto.password);
+  }
+  @Post('/signin')
+  signin(@Body() createUserDto: CreateUserDto): Promise<User>{
+    return this.authService.signin(createUserDto.email, createUserDto.password);
+  }
+
   // @Get(":userId")
   // async getUser(@Param("userId") userId: string): Promise<User> {
   //   return this.usersService.getUserById(userId);
@@ -28,13 +38,6 @@ export class UsersController {
   async getUsers(): Promise<User[]> {
     return this.usersService.getUsers();
   }
-
-  @Post('/signup')
-  async createUser(@Body() createUserDto: CreateUserDto): Promise<User> {
-    // return this.usersService.createUser(createUserDto.email, createUserDto.password);
-    return this.authService.signup(createUserDto.email, createUserDto.password);
-  }
-
   @Patch(":userId")
   async updateUser(@Param("userId") userId: string, @Body() updateUserDto: UpdateUserDto): Promise<User> {
     return this.usersService.updateUser(userId, updateUserDto);
