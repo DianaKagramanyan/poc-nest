@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Patch, Post, Delete, Query } from "@nestjs/common";
+import { Body, Controller, Get, Param, Patch, Post, Delete, Query, Session } from "@nestjs/common";
 import { CreateUserDto } from "./dto/create-user.dto";
 import { UpdateUserDto } from "./dto/update-user.dto";
 import { User } from "./schemas/user.schema";
@@ -14,30 +14,41 @@ export class UsersController {
               private authService: AuthService
   ) {}
 
-  @Post('/signup')
-  async createUser(@Body() createUserDto: CreateUserDto): Promise<User> {
-    // return this.usersService.createUser(createUserDto.email, createUserDto.password);
-    return this.authService.signup(createUserDto.email, createUserDto.password);
-  }
-  @Post('/signin')
-  signin(@Body() createUserDto: CreateUserDto): Promise<User>{
-    return this.authService.signin(createUserDto.email, createUserDto.password);
+  @Get("/whoami")
+  whoAmI(@Session() session: any) {
+    return this.usersService.getUserById(session.userId);
   }
 
-  // @Get(":userId")
-  // async getUser(@Param("userId") userId: string): Promise<User> {
-  //   return this.usersService.getUserById(userId);
-  // }
-  @Get("email")
-  async getUserByEmail(@Query("email") email: string): Promise<User> {
-    console.log(email);
-    return this.usersService.getUserByEmail(email);
+  @Post("/signup")
+  async createUser(@Body() createUserDto: CreateUserDto, @Session() session: any): Promise<User> {
+    // return this.usersService.createUser(createUserDto.email, createUserDto.password);
+    const user = await this.authService.signup(createUserDto.email, createUserDto.password);
+    session.userId = user.userId;
+    return user;
   }
+
+  @Post("/signin")
+  async signin(@Body() createUserDto: CreateUserDto, @Session() session: any): Promise<User> {
+    const user = await this.authService.signin(createUserDto.email, createUserDto.password);
+    session.userId = user.userId;
+    return user;
+  }
+
+  @Get(":userId")
+  async getUser(@Param("userId") userId: string): Promise<User> {
+    return this.usersService.getUserById(userId);
+  }
+  // @Get("email")
+  // async getUserByEmail(@Query("email") email: string): Promise<User> {
+  //   console.log(email);
+  //   return this.usersService.getUserByEmail(email);
+  // }
 
   @Get()
   async getUsers(): Promise<User[]> {
     return this.usersService.getUsers();
   }
+
   @Patch(":userId")
   async updateUser(@Param("userId") userId: string, @Body() updateUserDto: UpdateUserDto): Promise<User> {
     return this.usersService.updateUser(userId, updateUserDto);
