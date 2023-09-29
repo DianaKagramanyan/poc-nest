@@ -6,28 +6,36 @@ import { UsersService } from "./users.service";
 import { UserDto } from "./dto/user.dto";
 import { Serialize } from "../interceptors/serialize.interceptor";
 import { AuthService } from "./auth.service";
+import { CurrentUser } from "./decorators/current-user.decorator";
 
 @Controller("users")
 @Serialize(UserDto)
 export class UsersController {
   constructor(private readonly usersService: UsersService,
               private authService: AuthService
-  ) {}
+  ) {
+  }
+
   @Get("email")
   async getUserByEmail(@Query("email") email: string): Promise<User> {
     console.log(email);
     return this.usersService.getUserByEmail(email);
   }
 
+  // @Get("/whoami")
+  // whoAmI(@Session() session: any) {
+  //   return this.usersService.getUserById(session.userId);
+  // }
   @Get("/whoami")
-  whoAmI(@Session() session: any) {
-    return this.usersService.getUserById(session.userId);
+  whoAmI(@CurrentUser() user: string) {
+    return user;
   }
 
   @Post("/signout")
   signOut(@Session() session: any) {
     session.userId = null;
   }
+
   @Post("/signup")
   async createUser(@Body() createUserDto: CreateUserDto, @Session() session: any): Promise<User> {
     // return this.usersService.createUser(createUserDto.email, createUserDto.password);
@@ -47,6 +55,7 @@ export class UsersController {
   async getUser(@Param("userId") userId: string): Promise<User> {
     return this.usersService.getUserById(userId);
   }
+
   @Get()
   async getUsers(): Promise<User[]> {
     return this.usersService.getUsers();
