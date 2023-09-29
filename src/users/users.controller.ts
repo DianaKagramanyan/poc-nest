@@ -27,7 +27,7 @@ export class UsersController {
   //   return this.usersService.getUserById(session.userId);
   // }
   @Get("/whoami")
-  whoAmI(@CurrentUser() user: string) {
+  whoAmI(@CurrentUser() user: User) {
     return user;
   }
 
