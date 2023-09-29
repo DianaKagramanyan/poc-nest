@@ -13,12 +13,21 @@ export class UsersController {
   constructor(private readonly usersService: UsersService,
               private authService: AuthService
   ) {}
+  @Get("email")
+  async getUserByEmail(@Query("email") email: string): Promise<User> {
+    console.log(email);
+    return this.usersService.getUserByEmail(email);
+  }
 
   @Get("/whoami")
   whoAmI(@Session() session: any) {
     return this.usersService.getUserById(session.userId);
   }
 
+  @Post("/signout")
+  signOut(@Session() session: any) {
+    session.userId = null;
+  }
   @Post("/signup")
   async createUser(@Body() createUserDto: CreateUserDto, @Session() session: any): Promise<User> {
     // return this.usersService.createUser(createUserDto.email, createUserDto.password);
@@ -38,12 +47,6 @@ export class UsersController {
   async getUser(@Param("userId") userId: string): Promise<User> {
     return this.usersService.getUserById(userId);
   }
-  // @Get("email")
-  // async getUserByEmail(@Query("email") email: string): Promise<User> {
-  //   console.log(email);
-  //   return this.usersService.getUserByEmail(email);
-  // }
-
   @Get()
   async getUsers(): Promise<User[]> {
     return this.usersService.getUsers();

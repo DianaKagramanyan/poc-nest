@@ -10,8 +10,12 @@ export class UsersService {
   }
 
   async getUserById(userId: string): Promise<User> {
+    if (!userId) {
+      return null;
+    }
     return this.usersRepository.findOne({ userId });
   }
+
   async getUserByEmail(email: string): Promise<User> {
     console.log(email);
     return this.usersRepository.findOne({ email });
@@ -20,6 +24,7 @@ export class UsersService {
   async getUsers(): Promise<User[]> {
     return this.usersRepository.find({});
   }
+
   async createUser(email: string, password: string): Promise<User> {
     return this.usersRepository.create({
       userId: uuidv4(),
